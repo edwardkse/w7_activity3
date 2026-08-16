@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Don't let a Place problem become a customer relationship problem</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #d97706;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border-color: #e2e8f0;
+            --group1-color: #0284c7;
+            --group2-color: #0d9488;
+            --group3-color: #7c3aed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        header h2 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #93c5fd;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+        }
+
+        .article-context {
+            border-left: 4px solid var(--accent);
+            background-color: #fffbeb;
+        }
+
+        .article-context h3 {
+            color: #92400e;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .article-meta {
+            font-size: 0.85rem;
+            color: #b45309;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .article-link {
+            word-break: break-all;
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .scenario-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--primary-light);
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-weight: 500;
+        }
+
+        .section-header {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Group Tabs */
+        .tab-navigation {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .tab-btn.active[data-group="1"] {
+            background: var(--group1-color);
+            color: white;
+        }
+
+        .tab-btn.active[data-group="2"] {
+            background: var(--group2-color);
+            color: white;
+        }
+
+        .tab-btn.active[data-group="3"] {
+            background: var(--group3-color);
+            color: white;
+        }
+
+        .group-content {
+            display: none;
+        }
+
+        .group-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-card {
+            background: #fafafa;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .task-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .question-item {
+            margin-bottom: 1.25rem;
+        }
+
+        .question-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #334155;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Main Heading & Sub-heading -->
+    <header>
+        <h1>Activity</h1>
+        <h2>Don't let a Place problem become a customer relationship problem</h2>
+    </header>
+
+    <!-- Context / Case Background Section -->
+    <section class="card article-context">
+        <h3>
+            Case Background: Where the heck is my wedding dress? And other burning questions about the Canada Post strike
+        </h3>
+        <div class="article-meta">
+            By Shantaé Campbell • Published Dec 06, 2024 • 3 minute read<br>
+            Article Link: <a href="https://ca.finance.yahoo.com/news/where-heck-wedding-dress-other-204233734.html" target="_blank" rel="noopener noreferrer" class="article-link">https://ca.finance.yahoo.com/news/where-heck-wedding-dress-other-204233734.html</a>
+        </div>
+        <p>
+            The Canada Post strike in late 2024 disrupted parcel movement during the critical holiday period. 
+            Canada Post itself warned that deliveries would be delayed into early 2025 as it worked through accumulated volumes after operations resumed.
+        </p>
+        <div class="scenario-box">
+            💡 <strong>Imagine:</strong> An online retailer advertises: <em>“Order by December 18 — Guaranteed Christmas Delivery!”</em> 
+            Then its main delivery provider goes on strike.
+        </div>
+    </section>
+
+    <!-- Section: Discussion Questions -->
+    <section class="card">
+        <h3 class="section-header">Discussion Questions</h3>
+        
+        <!-- Group Navigation Tabs -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-group="1" onclick="switchGroup('1')">Group 1</button>
+            <button class="tab-btn" data-group="2" onclick="switchGroup('2')">Group 2</button>
+            <button class="tab-btn" data-group="3" onclick="switchGroup('3')">Group 3</button>
+        </div>
+
+        <!-- Group 1 Content -->
+        <div id="group1" class="group-content active">
+            <div class="task-card">
+                <div class="task-title">Task 1 – Crisis Recovery</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    What should companies do if a similar crisis happens? Justify your answers for each sub-question below:
+                </p>
+
+                <div class="question-item">
+                    <label for="g1_q1">1. Should the company continue advertising the promotion?</label>
+                    <textarea id="g1_q1" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label for="g1_q2">2. Should the company absorb the additional cost of using another courier?</label>
+                    <textarea id="g1_q2" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-title">Task 2 – Customers Are Angry</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    Social media is filled with: <em>“I ordered two weeks ago and still haven't received my parcel!”</em><br>
+                    Your company's reputation is beginning to suffer.
+                </p>
+
+                <div class="question-item">
+                    <label for="g1_t2_q1">What should you communicate to customers?</label>
+                    <textarea id="g1_t2_q1" style="min-height: 120px;" placeholder="Type your response here..."></textarea>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-title">Task 3 – The Warehouse Goes Offline</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    A major flood affects the area where your company's main warehouse is located. The warehouse cannot operate for at least one week, and access to the inventory is restricted. You still have 3,000 customer orders waiting to be fulfilled.
+                </p>
+
+                <div class="question-item">
+                    <label for="g1_t3_q1">Should you use another warehouse, supplier, retail outlet, or third-party logistics provider?</label>
+                    <textarea id="g1_t3_q1" style="min-height: 120px;" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group 2 Content -->
+        <div id="group2" class="group-content">
+            <div class="task-card">
+                <div class="task-title">Task 1 – Crisis Recovery</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    What should companies do if a similar crisis happens? Justify your answers for each sub-question below:
+                </p>
+
+                <div class="question-item">
+                    <label for="g2_q1">1. Should customers be charged more for alternative delivery?</label>
+                    <textarea id="g2_q1" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label for="g2_q2">2. Should the company temporarily stop accepting online orders?</label>
+                    <textarea id="g2_q2" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-title">Task 2 – Competitor Advantage</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    Your biggest competitor announces: <em>“Order today. Free delivery. Guaranteed before Christmas.”</em>
+                </p>
+
+                <div class="question-item">
+                    <label for="g2_t2_q1">Should your company match the offer? Why or why not?</label>
+                    <textarea id="g2_t2_q1" style="min-height: 140px;" placeholder="Type your justification and decision here..."></textarea>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-title">Task 3 – The Warehouse Goes Offline</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    A major flood affects the area where your company's main warehouse is located. The warehouse cannot operate for at least one week, and access to the inventory is restricted. You still have 3,000 customer orders waiting to be fulfilled.
+                </p>
+
+                <div class="question-item">
+                    <label for="g2_t3_q1">Which customers should receive priority? And why?</label>
+                    <textarea id="g2_t3_q1" style="min-height: 120px;" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group 3 Content -->
+        <div id="group3" class="group-content">
+            <div class="task-card">
+                <div class="task-title">Task 1 – Crisis Recovery</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    What should companies do if a similar crisis happens? Justify your answers for each sub-question below:
+                </p>
+
+                <div class="question-item">
+                    <label for="g3_q1">1. Which is more important: protecting profit margins or protecting customer relationships?</label>
+                    <textarea id="g3_q1" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label for="g3_q2">2. How can the company turn a distribution crisis into an opportunity to demonstrate good customer service?</label>
+                    <textarea id="g3_q2" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-title">Task 2 – Costs Explode</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    Alternative couriers increase their prices by 40% because of high demand.
+                </p>
+
+                <div class="question-item">
+                    <label for="g3_t2_q1">What will you change?</label>
+                    <textarea id="g3_t2_q1" style="min-height: 140px;" placeholder="Type your plan and adjustments here..."></textarea>
+                </div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-title">Task 3 – The Warehouse Goes Offline</div>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">
+                    A major flood affects the area where your company's main warehouse is located. The warehouse cannot operate for at least one week, and access to the inventory is restricted. You still have 3,000 customer orders waiting to be fulfilled.
+                </p>
+
+                <div class="question-item">
+                    <label for="g3_t3_q1">1. Should you temporarily stop taking new orders?</label>
+                    <textarea id="g3_t3_q1" placeholder="Type your answer and justification here..."></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label for="g3_t3_q2">2. How should you communicate the situation to customers?</label>
+                    <textarea id="g3_t3_q2" placeholder="Type your communication plan here..."></textarea>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function switchGroup(groupNum) {
+        // Update active tab button
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.tab-btn[data-group="${groupNum}"]`).classList.add('active');
+
+        // Update active content
+        document.querySelectorAll('.group-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`group${groupNum}`).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
